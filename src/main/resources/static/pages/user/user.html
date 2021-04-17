@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>租赁管理</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/components/el-ment.v2.15.1/index.css">
+    <!-- 引入组件库 -->
+    <script src="/components/vue.v2.6.12/vue.js"></script>
+    <script src="/components/el-ment.v2.15.1/index.js"></script>
+    <script src="/components/axios.v0.21.1/axios.js"></script>
+    <script src="/components/http-vue-loader.1.4.2/httpVueLoader.js"></script>
+
+    <style>
+        .el-row {
+            margin-bottom: 20px;
+        &:last-child {
+             margin-bottom: 0;
+         }
+        }
+        .el-col {
+            border-radius: 4px;
+        }
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+        .bg-purple {
+            background: #d3dce6;
+        }
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+        .row-bg {
+            padding: 10px 0;
+            background-color: #f9fafc;
+        }
+
+        .page-component .content>h3 {
+            margin: 55px 0 20px;
+        }
+
+        .page-container h2, .page-container h3, .page-container h4, .page-container h5 {
+            font-weight: 400;
+            color: #1f2f3d;
+        }
+        .page-container h3 {
+            font-size: 22px;
+        }
+
+        .item,.btn{
+            width: 100%;
+        }
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="app" class="page-container">
+
+        <h3 id="hun-he-bu-ju">租户管理</h3>
+        <el-row :gutter="20">
+            <el-col :span="4">
+                <el-badge class="item">
+                    <el-button size="small" class="btn" @click="link('0')" type="primary">租户管理</el-button>
+                </el-badge>
+            </el-col>
+            <el-col :span="4">
+                <el-badge class="item">
+                    <el-button size="small" class="btn" @click="link('1')">房屋管理</el-button>
+                </el-badge>
+            </el-col>
+            <el-col :span="4">
+                <el-badge class="item">
+                    <el-button size="small" class="btn" @click="link('2')">我的待办</el-button>
+                </el-badge>
+            </el-col>
+            <el-col :span="4"></el-col>
+            <el-col :span="4"></el-col>
+            <el-col :span="4"></el-col>
+        </el-row>
+        <el-row>
+            <el-button size="small" @click="addDialog = true">添&nbsp;加</el-button>
+        </el-row>
+        <el-row>
+            <el-table
+                    :data="tableData"
+                    style="width: 100%"
+                    :default-sort = "{prop: 'date', order: 'descending'}">
+                <!--:row-class-name="tableRowClassName"-->
+                <el-table-column
+                        prop="crateDate"
+                        label="创建日期"
+                        sortable
+                        :formatter="formatter">
+                </el-table-column>
+                <el-table-column
+                        prop="name"
+                        label="姓名">
+                </el-table-column>
+                <el-table-column
+                        prop="phone"
+                        label="手机号">
+                </el-table-column>
+
+
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button
+                                size="mini"
+                                type="primary"
+                                @click="handleHistory(scope.$index, scope.row)">租赁记录</el-button>
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="table">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[10, 20, 30, 40]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="total">
+                </el-pagination>
+            </div>
+        </el-row>
+
+        <el-dialog
+                :title="form.id?'编辑':'添加'"
+                :visible.sync="addDialog"
+                width="75%">
+            <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+                <el-form-item label="姓名" prop="name">
+                    <el-input v-model="form.name" maxlength="10" show-word-limit></el-input>
+                </el-form-item>
+
+                <el-form-item label="性别">
+                    <el-radio-group v-model="form.sex">
+                        <el-radio label="0">男</el-radio>
+                        <el-radio label="1">女</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+
+                <el-form-item label="年龄">
+                    <el-input v-model.number="form.age" maxlength="2" show-word-limit></el-input>
+                </el-form-item>
+
+                <el-form-item label="手机号">
+                    <el-input v-model="form.phone" maxlength="20" show-word-limit></el-input>
+                </el-form-item>
+
+                <el-form-item label="备注">
+                    <el-input type="textarea" v-model="form.memo" maxlength="500" show-word-limit></el-input>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('form')">立即创建</el-button>
+                    <el-button @click="resetForm('form')">重置</el-button>
+                </el-form-item>
+            </el-form>
+
+        </el-dialog>
+
+        <leasing ref="leasing" :visible.sync="leasingDialog" :user-id="form.id"></leasing>
+    </div>
+    <script src="/pages/user/user.js?v=0.2"></script>
+</body>
+<script>
+
+</script>
+</html>
