@@ -29,6 +29,19 @@ spring:
 #    generate-ddl: true
     hibernate:
       ddl-auto: update
+  redis:
+    database: 0
+    host: 192.168.1.211
+    port: 6379
+    password:
+    timeout: 1000
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+
 
 
 

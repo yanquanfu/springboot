@@ -66,7 +66,9 @@ public class WebSocketServer {
         log.info("用户连接:" + userId + ",当前在线人数为:" + getOnlineCount());
 
         try {
-            sendMessage("连接成功");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("msg","连接成功");
+            sendMessage(jsonObject.toJSONString());
         } catch (IOException e) {
             log.error("用户:" + userId + ",网络异常!!!!!!");
         }
