@@ -24,12 +24,24 @@ public class AuthService {
      * "expires_in": 2592000
      * }
      */
-    public static String getAuth() {
+    public static String getOcrAuth() {
         // 官网获取的 API Key 更新为你注册的
         String clientId = "wLXGRBfAqO186Sq2eFUGB5yi";
         // 官网获取的 Secret Key 更新为你注册的
         String clientSecret = "ussUbv0Fs02uPLARyFzQRTL4gid63f2z";
-        return getAuth(clientId, clientSecret);
+        return getOcrAuth(clientId, clientSecret);
+    }
+
+    /**
+     * 获取语音合成token
+     * @return
+     */
+    public static String getTtsAuth() {
+        // 官网获取的 API Key 更新为你注册的
+        String clientId = "tNRHcpVSfvjZ11BKnyhwv9xR";
+        // 官网获取的 Secret Key 更新为你注册的
+        String clientSecret = "bFcPUXG3x2vcMcLZOWsmG1ASTy1dx1E0";
+        return getOcrAuth(clientId, clientSecret);
     }
 
     /**
@@ -42,7 +54,7 @@ public class AuthService {
      * "24.460da4889caad24cccdb1fea17221975.2592000.1491995545.282335-1234567"
      * "wLXGRBfAqO186Sq2eFUGB5yi" "ussUbv0Fs02uPLARyFzQRTL4gid63f2z"
      */
-    public static String getAuth(String ak, String sk) {
+    public static String getOcrAuth(String ak, String sk) {
         // 获取token地址
         String authHost = "https://aip.baidubce.com/oauth/2.0/token?";
         String getAccessTokenUrl = authHost
@@ -84,5 +96,8 @@ public class AuthService {
         }
         return null;
     }
+
+
+
 
 }

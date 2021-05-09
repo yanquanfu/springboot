@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.business.util.StringUtils;
 import com.example.demo.system.baidu.auth.AuthService;
 import com.example.demo.system.baidu.ocr.GeneralBasic;
+import com.example.demo.system.baidu.tts.AudioTts;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,22 @@ public class WebDriverTest {
         return auth;
     }
 
+    private void tts(){
+        String token = "24.c793556a5d57a4903a95e594ea44211e.2592000.1622812933.282335-24111520";
+        AudioTts.transform(token,"你好，我是志琳","get");
+    }
+
     public static void main(String[] args) throws IOException {
 
         WebDriverTest webDriverTest = new WebDriverTest();
+        webDriverTest.tts();
+        if (true){
+            return;
+        }
+
         String ocrAuth = webDriverTest.getOcrAuth(false);
+//        AuthService.getTtsAuth();
+
 
         System.setProperty("webdriver.chrome.driver", "d:\\chromedriver.exe");
 

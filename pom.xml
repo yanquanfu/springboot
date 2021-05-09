@@ -101,6 +101,19 @@
             <version>3.141.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.baidu.aip</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>4.15.7</version>
+        </dependency>
+
+        <!--引用音频jar-->
+        <dependency>
+            <groupId>com.synthbot</groupId>
+            <artifactId>jasiohost</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/JAsioHost.jar</systemPath>
+        </dependency>
 
     </dependencies>
 
